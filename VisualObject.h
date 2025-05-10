@@ -11,9 +11,9 @@ class VisualObject
 public:
     VisualObject();
 
-    void move(float x, float y = 0.0f, float z = 0.0f);
-    void scale(float s);
-    void rotate(float t, float x, float y, float z);
+   virtual void move(float x, float y = 0.0f, float z = 0.0f);
+    virtual void scale(float s);
+   virtual void rotate(float t, float x, float y, float z);
 
 	//Setters and Getters
     inline std::vector<Vertex> getVertices() { return mVertices; }
@@ -34,6 +34,9 @@ public:
 
     QVector3D getPosition();
     void setPosition(float x, float y, float z);
+
+    //Tick
+    virtual void Tick(float Deltatime);
 
 protected:
     std::vector<Vertex> mVertices;

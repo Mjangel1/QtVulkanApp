@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include "Camera.h"
+#include "Player.h"
 #include "VisualObject.h"
 #include "Utilities.h"
 
@@ -75,6 +76,10 @@ protected:
 
     VkQueue mGraphicsQueue{ VK_NULL_HANDLE };
 
+    //Tick part for objects
+    float deltaTime{NULL};
+    std::chrono::steady_clock::time_point lastUpdate;
+
 private:
     friend class VulkanWindow;
 	std::vector<VisualObject*> mObjects;    //All objects in the program  
@@ -121,6 +126,13 @@ private:
 		//VkPipelineLayout pipelineLayout{ VK_NULL_HANDLE };    //also should have had a spesific pipeline layout
         VkPipeline pipeline{ VK_NULL_HANDLE };
     } mColorMaterial;
+
+
+    //Player
+    Player* mPlayer{nullptr};
+
+
+
 };
 
 #endif // RENDERER_H

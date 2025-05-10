@@ -15,6 +15,9 @@ QVulkanWindowRenderer* VulkanWindow::createRenderer()
 //We set values on the camera a lot from this class, so it is convenient to have a pointer to it
     mCamera = &dynamic_cast<Renderer*>(mRenderer)->mCamera;
 
+    //Player
+    mPlayer = dynamic_cast<Renderer*>(mRenderer)->mPlayer;
+
     return mRenderer;
 }
 
@@ -239,5 +242,24 @@ void VulkanWindow::handleInput()
             mCamera->updateHeigth(mCameraSpeed);
         if (mInput.E)
             mCamera->updateHeigth(-mCameraSpeed);
+    }
+    else
+    {
+        if (mInput.W)
+        {
+            mPlayer->move(0,0,-1);
+        }
+        if (mInput.S)
+        {
+            mPlayer->move(0,0,1);
+        }
+        if (mInput.D)
+        {
+            mPlayer->move(1,0,0);
+        }
+        if (mInput.A)
+        {
+            mPlayer->move(-1,0,0);
+        }
     }
 }

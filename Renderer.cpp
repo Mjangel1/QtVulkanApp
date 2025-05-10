@@ -39,6 +39,16 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(4)->setName("suzanne");
     static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
 
+    //Player
+    mPlayer = new Player();
+    mObjects.push_back(mPlayer);
+    mPlayer->SetPostion(QVector3D(0,0,0));
+    mPlayer->scale(0.5f);
+
+
+
+
+
     // **************************************
     // Objects in optional map
     // **************************************
@@ -304,6 +314,12 @@ void Renderer::initSwapChainResources()
 
 void Renderer::startNextFrame()
 {
+    //Tick
+    auto now = std::chrono::steady_clock::now();
+    deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(now - lastUpdate).count() / 1000000.0f;
+    lastUpdate = now;
+
+
     //Handeling input from keyboard and mouse is done in VulkanWindow
     //Has to be done each frame to get smooth movement
     mVulkanWindow->handleInput();
@@ -323,6 +339,8 @@ void Renderer::startNextFrame()
     /********************************* Our draw call!: *********************************/
     for (std::vector<VisualObject*>::iterator it=mObjects.begin(); it!=mObjects.end(); it++)
     {
+        //Tick
+        (*it)->Tick(deltaTime);
         //Draw type
 		if ((*it)->getDrawType() == 0)
 			mDeviceFunctions->vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mPipeline1);

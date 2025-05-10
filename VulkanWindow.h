@@ -50,6 +50,8 @@ private:
     int mMouseYlast{0};
 
     class Camera* mCamera{ nullptr };
+
+    class Player* mPlayer{nullptr};
 };
 
 #endif // VULKANWINDOW_H
