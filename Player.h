@@ -1,7 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+
 #include "ObjMesh.h"
+
 
 class Player : public ObjMesh
 {
@@ -16,8 +18,10 @@ public:
 private:
 
     QVector3D CurrentPos{0,0,0};
+    QVector3D Direction;
     float mSpeed;
     float mScale;
+
 
 public:
 

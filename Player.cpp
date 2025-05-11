@@ -10,6 +10,7 @@ void Player::Tick(float Deltatime)
 {
   mSpeed = 3* Deltatime;
 
+
 }
 
 void Player::UpdateMatrix()
@@ -46,14 +47,19 @@ float Player::GetScale()
 
 void Player::move(float x, float y, float z)
 {
+    //prevents diagonal movement from being faster then 1 direction movement
+    //make vector always be 1 when moving
+    Direction = QVector3D(x,y,z);
 
-
-    float XDirection = x * mSpeed;
-    float ZDirection = z * mSpeed;
+    if(Direction.length() >0)
+    {
+         Direction.normalize();
+    }
 
     QVector3D LastPosition = getPosition();
+    QVector3D MoveDirection = (Direction*mSpeed);
 
 
-    SetPostion(LastPosition+QVector3D(XDirection,0,ZDirection));
+    SetPostion(LastPosition +MoveDirection);
 
 }

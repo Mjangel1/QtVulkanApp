@@ -228,6 +228,13 @@ void VulkanWindow::handleInput()
 {
     //Camera
     mCamera->setSpeed(0.f);  //cancel last frame movement
+
+    //Player
+    float x = 0.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+
+
     if (mInput.RMB)
     {
         if (mInput.W)
@@ -245,21 +252,41 @@ void VulkanWindow::handleInput()
     }
     else
     {
+        //like this allows to read 2 inputs at the same time
+        if (mInput.UP)
+        {
+            z = -1.0f;
+        }
+        if (mInput.DOWN)
+        {
+           z = 1.0f;
+        }
+        if (mInput.LEFT)
+        {
+            x = 1.0f;
+        }
+        if (mInput.RIGHT)
+        {
+            x = -1.0f;
+        }
+
         if (mInput.W)
         {
-            mPlayer->move(0,0,-1);
+            z = -1.0f;
         }
         if (mInput.S)
         {
-            mPlayer->move(0,0,1);
+            z = 1.0f;
         }
         if (mInput.D)
         {
-            mPlayer->move(1,0,0);
+            x = 1.0f;
         }
         if (mInput.A)
         {
-            mPlayer->move(-1,0,0);
+            x = -1.0f;
         }
+
+        mPlayer->move(x,y,z);
     }
 }
