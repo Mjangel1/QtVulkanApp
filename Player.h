@@ -21,6 +21,7 @@ private:
     QVector3D Direction;
     float mSpeed;
     float mScale;
+    float y = 0;
 
 
 public:
@@ -29,12 +30,13 @@ public:
     void SetPostion(const QVector3D &Position);
     QVector3D GetPosition();
 
+    //Scale
     void scale(float s) override;
     float GetScale();
 
     void move(float x,float y,float z) override;
 
-    //Scale
+    void SetYPosition(float Y);
 
 
 };

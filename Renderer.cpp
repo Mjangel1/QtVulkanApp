@@ -9,6 +9,7 @@
 #include "HeightMap.h"
 #include "stb_image.h"
 #include "ObjMesh.h"
+#include "Barycentric.h"
 
 /*** Renderer class ***/
 Renderer::Renderer(QVulkanWindow *w, bool msaa)
@@ -46,6 +47,9 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mPlayer->scale(0.5f);
 
 
+
+    float y = getPositionInTerrain(static_cast<HeightMap*>(mObjects.at(3)),mPlayer->GetPosition().x(),mPlayer->GetPosition().z());
+    mPlayer->SetYPosition(y);
 
 
 
@@ -366,6 +370,18 @@ void Renderer::startNextFrame()
     /***************************************/
 
     mDeviceFunctions->vkCmdEndRenderPass(commandBuffer);
+
+
+    QVector3D LastPosition(mPlayer->GetPosition().x(),0, mPlayer->GetPosition().z());
+    //Player prevent from moving ouside the HeightMap
+    float y = getPositionInTerrain(static_cast<HeightMap*>(mObjects.at(3)),mPlayer->GetPosition().x(),mPlayer->GetPosition().z());
+    //qDebug() << y;
+
+     mPlayer->SetYPosition(y);
+
+
+
+
 
     //Hardcoded!!!
     mObjects.at(1)->rotate(1.0f, 0.0f, 0.0f, 1.0f);

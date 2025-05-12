@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player() : ObjMesh(assetPath + "cube.obj")
+Player::Player() : ObjMesh(assetPath + "cylinder.obj")
 {
 
 
@@ -15,6 +15,7 @@ void Player::Tick(float Deltatime)
 
 void Player::UpdateMatrix()
 {
+    CurrentPos.setY(y);
     //Provents scaling issues
     mMatrix.setToIdentity();
     mMatrix.translate(CurrentPos);
@@ -62,4 +63,10 @@ void Player::move(float x, float y, float z)
 
     SetPostion(LastPosition +MoveDirection);
 
+}
+
+void Player::SetYPosition(float Y)
+{
+    y = Y;
+    UpdateMatrix();
 }
