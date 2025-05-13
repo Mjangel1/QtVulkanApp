@@ -5,6 +5,8 @@
 #include <vector>
 #include <unordered_map>
 #include "Camera.h"
+#include "NPC.h"
+#include "NPCwithBEZIER.h"
 #include "Player.h"
 #include "VisualObject.h"
 #include "Utilities.h"
@@ -74,6 +76,9 @@ protected:
     VkPipelineLayout mPipelineLayout{ VK_NULL_HANDLE };
     VkPipeline mPipeline1{ VK_NULL_HANDLE };
 
+    //New Pipeline for Objects that wont have textures
+    VkPipeline mPipeline2{ VK_NULL_HANDLE };
+
     VkQueue mGraphicsQueue{ VK_NULL_HANDLE };
 
     //Tick part for objects
@@ -125,11 +130,19 @@ private:
         VkShaderModule fragShaderModule;
 		//VkPipelineLayout pipelineLayout{ VK_NULL_HANDLE };    //also should have had a spesific pipeline layout
         VkPipeline pipeline{ VK_NULL_HANDLE };
+
+
     } mColorMaterial;
 
 
     //Player
     Player* mPlayer{nullptr};
+
+    //NPC
+    //NPC* mNpc;
+
+    //NPC with Bezier for movement
+    NPCwithBEZIER* mNpcBezier;
 
 
 

@@ -18,6 +18,37 @@ ObjMesh::ObjMesh(const std::string& filename)
     mMatrix.translate(1.f, 0, 0);
 }
 
+QVector3D ObjMesh::GetDimensions()
+{
+    std::vector <Vertex> Vertices =getVertices();
+
+    QVector3D minCorner;
+    QVector3D maxCorner;
+
+    for (int var = 0; var < Vertices.size(); ++var)
+    {
+        QVector3D pos = QVector3D(Vertices.at(var).x,Vertices.at(var).y,Vertices.at(var).z);
+
+        //finds the minimum value of x ,y,z
+        minCorner.setX(qMin(minCorner.x(), pos.x()));
+        minCorner.setZ(qMin(minCorner.y(), pos.y()));
+        minCorner.setY(qMin(minCorner.z(), pos.z()));
+
+
+         //finds the Maximum value of x ,y,z
+        maxCorner.setX(qMax(maxCorner.x(), pos.x()));
+        maxCorner.setY(qMax(maxCorner.y(), pos.y()));
+        maxCorner.setZ(qMax(maxCorner.z(), pos.z()));
+
+    }
+
+    // to know the actual dimensions we need to  get the difference between the max and min
+    QVector3D Dimension = QVector3D(maxCorner-minCorner);
+
+
+    return Dimension;
+}
+
 bool ObjMesh::readObjFile(const std::string& filename)
 {
 

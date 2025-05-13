@@ -12,7 +12,13 @@ public:
     VisualObject();
 
    virtual void move(float x, float y = 0.0f, float z = 0.0f);
+
+//Overall scale, meaning it will scal every value(x,y,z) by the s value
     virtual void scale(float s);
+
+    //scale  only x and y
+    virtual void ScaleXY(float x, float y);
+
    virtual void rotate(float t, float x, float y, float z);
 
 	//Setters and Getters
@@ -35,8 +41,27 @@ public:
     QVector3D getPosition();
     void setPosition(float x, float y, float z);
 
+    float x()
+    {
+        return getPosition().x();
+    }
+
+    float y()
+    {
+        return getPosition().y();
+    }
+
+    float z()
+    {
+        return getPosition().z();
+    }
+
     //Tick
     virtual void Tick(float Deltatime);
+
+
+    //For NPC to check if they detected the player
+    virtual void IsDetected(bool bIsDetected, const QVector3D &PlayerPos);
 
 protected:
     std::vector<Vertex> mVertices;

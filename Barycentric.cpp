@@ -11,7 +11,7 @@ float getPositionInTerrain(HeightMap *Terrain, float Positionx, float PositionZ)
     const auto& vertices = Terrain->getVertices();
 
     //THE offset it so that the object does not clip throught the terrain.
-    float offset = 0.1f;
+    float offset = 0.5f;
 
 
     for(size_t i = 0; i+2 < indices.size(); i+=3)

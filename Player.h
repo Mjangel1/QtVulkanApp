@@ -23,6 +23,9 @@ private:
     float mScale;
     float y = 0;
 
+    float mScaleX;
+    float mScaleY;
+
 
 public:
 
@@ -30,9 +33,13 @@ public:
     void SetPostion(const QVector3D &Position);
     QVector3D GetPosition();
 
-    //Scale
+    //Scale overall
     void scale(float s) override;
     float GetScale();
+
+    //Scale only x and Y
+    void ScaleXY(float x, float y) override;
+
 
     void move(float x,float y,float z) override;
 

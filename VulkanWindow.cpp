@@ -263,11 +263,11 @@ void VulkanWindow::handleInput()
         }
         if (mInput.LEFT)
         {
-            x = 1.0f;
+            x = -1.0f;
         }
         if (mInput.RIGHT)
         {
-            x = -1.0f;
+            x = 1.0f;
         }
 
         if (mInput.W)

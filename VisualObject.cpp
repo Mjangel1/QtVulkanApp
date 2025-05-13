@@ -13,6 +13,12 @@ void VisualObject::move(float x, float y, float z)
 void VisualObject::scale(float s)
 {
     mMatrix.scale(s);
+
+}
+
+void VisualObject::ScaleXY(float x, float y)
+{
+    mMatrix.scale(x,y);
 }
 
 void VisualObject::rotate(float t, float x, float y, float z)
@@ -36,6 +42,11 @@ void VisualObject::setPosition(float x, float y, float z)
 }
 
 void VisualObject::Tick(float Deltatime)
+{
+
+}
+
+void VisualObject::IsDetected(bool bIsDetected, const QVector3D &PlayerPos)
 {
 
 }

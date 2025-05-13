@@ -9,6 +9,8 @@ class ObjMesh : public VisualObject
 public:
     ObjMesh(const std::string& filename);
 
+    QVector3D GetDimensions();
+
 private:
 	bool readObjFile(const std::string& filename);
 };

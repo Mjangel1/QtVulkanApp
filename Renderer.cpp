@@ -10,6 +10,7 @@
 #include "stb_image.h"
 #include "ObjMesh.h"
 #include "Barycentric.h"
+#include "Surface.h"
 
 /*** Renderer class ***/
 Renderer::Renderer(QVulkanWindow *w, bool msaa)
@@ -40,20 +41,50 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(4)->setName("suzanne");
     static_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
 
+    //Tree
+    // mObjects.push_back(new ObjMesh(assetPath + "cylinder.obj"));
+    // mObjects.at(5)->setName("treeBase");
+    // mObjects.at(5)->setPosition(-1,0,-0.5);
+    // mObjects.push_back(new ObjMesh(assetPath + "sphere.obj"));
+    // mObjects.at(6)->setName("treeTop");
+    // mObjects.at(6)->setPosition(-1.5,0,-1.5);
+
+
+    //Surface
+    // mObjects.push_back(new Surface());
+    // mObjects.at(5)->setPosition(0,4,0);
+
     //Player
     mPlayer = new Player();
     mObjects.push_back(mPlayer);
-    mPlayer->SetPostion(QVector3D(0,0,0));
-    mPlayer->scale(0.5f);
+    //Starting Position for Player
+    mPlayer->SetPostion(QVector3D(2.5,0,0));
+    mPlayer->ScaleXY(0.5f,2);
 
 
 
-    float y = getPositionInTerrain(static_cast<HeightMap*>(mObjects.at(3)),mPlayer->GetPosition().x(),mPlayer->GetPosition().z());
-    mPlayer->SetYPosition(y);
+    float PlayerY = getPositionInTerrain(static_cast<HeightMap*>(mObjects.at(3)),mPlayer->GetPosition().x(),mPlayer->GetPosition().z());
+    mPlayer->SetYPosition(PlayerY);
 
 
 
-    // **************************************
+    //NPC
+    // mNpc = new NPC();
+    // mObjects.push_back(mNpc);
+    // //mNpc->SetPostion(QVector3D(0,0,0));
+
+    // float EnemyY = getPositionInTerrain(static_cast<HeightMap*>(mObjects.at(3)),mNpc->GetPosition().x(),mNpc->GetPosition().z());
+    // mNpc->SetYPosition(EnemyY);
+
+
+    //NPC with bezier
+    mNpcBezier =  new NPCwithBEZIER();
+    mObjects.push_back(mNpcBezier);
+    float BezierEnemyY = getPositionInTerrain(static_cast<HeightMap*>(mObjects.at(3)),mNpcBezier->GetPosition().x(),mNpcBezier->GetPosition().z());
+    mNpcBezier->SetYPosition(BezierEnemyY);
+
+
+    // **************************************2
     // Objects in optional map
     // **************************************
     for (auto it=mObjects.begin(); it!=mObjects.end(); it++)
@@ -280,6 +311,19 @@ void Renderer::initResources()
         qFatal("Failed to create graphics pipeline: %d", result);
 
 
+    //Making a pipeline for triangle without using textures
+    mPipeline2 = mPipeline1;                       // reusing most of the settings from the first pipeline
+    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP; //draw triangels
+    rasterization.polygonMode = VK_POLYGON_MODE_FILL;           // VK_POLYGON_MODE_LINE will make a wireframe; VK_POLYGON_MODE_FILL
+    rasterization.lineWidth = 5.0f;
+    pipelineInfo.pInputAssemblyState = &inputAssembly;
+    pipelineInfo.pStages = shaderStagesC;
+    result = mDeviceFunctions->vkCreateGraphicsPipelines(logicalDevice, mPipelineCache, 1, &pipelineInfo, nullptr, &mPipeline2);
+    if (result != VK_SUCCESS)
+        qFatal("Failed to create graphics pipeline: %d", result);
+
+
+
 	// Destroying the shader modules, we won't need them anymore after the pipeline is created
     if (vertShaderModule)
         mDeviceFunctions->vkDestroyShaderModule(logicalDevice, vertShaderModule, nullptr);
@@ -345,11 +389,16 @@ void Renderer::startNextFrame()
     {
         //Tick
         (*it)->Tick(deltaTime);
-        //Draw type
-		if ((*it)->getDrawType() == 0)
-			mDeviceFunctions->vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mPipeline1);
-		else
-			mDeviceFunctions->vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mColorMaterial.pipeline);
+
+        //Draw type (0 = fill with texture, 1 = fill, 2= lines)
+        if ((*it)->getDrawType() == 0)
+            mDeviceFunctions->vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mPipeline1);
+
+        else if((*it)->getDrawType() == 1)
+            mDeviceFunctions->vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mPipeline2);
+
+        else if((*it)->getDrawType() == 2)
+            mDeviceFunctions->vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mColorMaterial.pipeline);
 
         QMatrix4x4 mvp = mCamera.projectionMatrix() * mCamera.viewMatrix() * (*it)->getMatrix();
         setModelMatrix((*it)->getMatrix()); //mvp);
@@ -373,6 +422,7 @@ void Renderer::startNextFrame()
 
 
     QVector3D LastPosition(mPlayer->GetPosition().x(),0, mPlayer->GetPosition().z());
+
     //Player prevent from moving ouside the HeightMap
     float y = getPositionInTerrain(static_cast<HeightMap*>(mObjects.at(3)),mPlayer->GetPosition().x(),mPlayer->GetPosition().z());
     //qDebug() << y;
@@ -381,10 +431,33 @@ void Renderer::startNextFrame()
 
 
 
+     //NPC
+     // float EnemyY = getPositionInTerrain(static_cast<HeightMap*>(mObjects.at(3)),mNpc->GetPosition().x(),mNpc->GetPosition().z());
+      //mNpc->SetYPosition(EnemyY);
+
+     //NPC with bezier
+     float BezierEnemyY = getPositionInTerrain(static_cast<HeightMap*>(mObjects.at(3)),mNpcBezier->GetPosition().x(),mNpcBezier->GetPosition().z());
+     mNpcBezier->SetYPosition(BezierEnemyY);
+
+
+     for (std::vector<VisualObject*>::iterator it=mObjects.begin(); it!=mObjects.end(); it++)
+     {
+         if((*it)->getName() == "NPC")
+         {
+             if(((*it)->getPosition() - mPlayer->GetPosition()).length() < 2.5f)
+             {
+                 (*it)->IsDetected(true,mPlayer->GetPosition());
+
+             }
+             else
+                 (*it)->IsDetected(false,mPlayer->GetPosition());
+         }
+
+     }
 
 
     //Hardcoded!!!
-    mObjects.at(1)->rotate(1.0f, 0.0f, 0.0f, 1.0f);
+   // mObjects.at(1)->rotate(1.0f, 0.0f, 0.0f, 1.0f);
     
     mWindow->frameReady();
     mWindow->requestUpdate(); // render continuously, throttled by the presentation rate
@@ -804,6 +877,11 @@ void Renderer::releaseResources()
     if (mPipeline1) {
         mDeviceFunctions->vkDestroyPipeline(dev, mPipeline1, nullptr);
         mPipeline1 = VK_NULL_HANDLE;
+    }
+
+    if (mPipeline2) {
+        mDeviceFunctions->vkDestroyPipeline(dev, mPipeline2, nullptr);
+        mPipeline2 = VK_NULL_HANDLE;
     }
 
     if (mColorMaterial.pipeline) {
