@@ -1,6 +1,6 @@
 #include "NPCwithBEZIER.h"
 
-NPCwithBEZIER::NPCwithBEZIER() : ObjMesh(assetPath + "cube.obj")
+NPCwithBEZIER::NPCwithBEZIER() : ObjMesh(assetPath + "cylinder.obj")
 {
     PatrolPos.push_back(QVector2D(-2.5,-2.0));
     PatrolPos.push_back(QVector2D(1.0,0.50));
@@ -47,7 +47,7 @@ void NPCwithBEZIER::Tick(float Deltatime)
 
     BezierT +=  BezierDirection*(0.2  * Time);
 
-qDebug()<<d;
+//qDebug()<<d;
 
    // qDebug()<<bDetected;
 
@@ -167,6 +167,8 @@ float NPCwithBEZIER::GetScale()
 void NPCwithBEZIER::move(float x, float y, float z)
 {
 
+
+                        // Player Pos                 Enemy(this class) current Position
     QVector2D Direction = QVector2D(x,z) - QVector2D(GetPosition().x(),GetPosition().z());
     // qDebug()<<GetPosition();
 

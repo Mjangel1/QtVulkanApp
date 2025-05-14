@@ -1,4 +1,5 @@
 #include "VisualObject.h"
+#include "ColliderAABB.h"
 
 VisualObject::VisualObject()
 {
@@ -50,3 +51,18 @@ void VisualObject::IsDetected(bool bIsDetected, const QVector3D &PlayerPos)
 {
 
 }
+
+void VisualObject::GetColliderAABB(ColliderAABB *colliderAABB)
+{
+
+}
+
+
+
+
+
+
+
+
+
+

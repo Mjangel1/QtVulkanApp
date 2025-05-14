@@ -17,13 +17,25 @@ void Player::Tick(float Deltatime)
     mSpeed = 3 * qBound(0.01f, Deltatime, 0.1f);
 
 
+
+    //qDebug()<< GetPosition().y();
+
+    if(!bInsideMap)
+    {
+        //qDebug() << "outside";
+        OutsideBoundry();
+    }
+
+    qDebug()<<bInsideMap;
+
 }
 
 void Player::UpdateMatrix()
 {
-    CurrentPos.setY(y);
+
     //Provents scaling issues
     mMatrix.setToIdentity();
+    CurrentPos.setY(y);
     mMatrix.translate(CurrentPos);
 
     //mMatrix.scale(GetScale());
@@ -71,16 +83,45 @@ void Player::move(float x, float y, float z)
          Direction.normalize();
     }
 
-    QVector3D LastPosition = getPosition();
+    if(bInsideMap)
+    {
+        LastPosition = getPosition();
+    }
+
     QVector3D MoveDirection = (Direction*mSpeed);
 
 
-    SetPostion(LastPosition + MoveDirection);
+
+
+    SetPostion(GetPosition() + MoveDirection);
 
 }
 
 void Player::SetYPosition(float Y)
 {
-    y = Y;
+    if(bInsideMap)
+    {
+        y = Y;
+
+    }
+    else
+    {
+        y = LastPosition.y();
+    }
+
     UpdateMatrix();
+}
+
+void Player::OutsideBoundry()
+{
+
+    SetPostion(LastPosition);
+
+}
+
+bool Player::getIsInsideMap(bool IsInside)
+{
+    bInsideMap = IsInside;
+    return bInsideMap;
+
 }

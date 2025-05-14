@@ -41,7 +41,7 @@ void HeightMap::makeTerrain(unsigned char* textureData, int widthIn, int heightI
     //Moves the terrain mesh up or down
     //Because of Barycentric calculations, we want the terrain to be in World coordinates!
 	//So we don't want to move the terrain up or down in the Y axis after it is made
-    float heightPlacement{-5.f};
+    float heightPlacement{0.f};
 
     //Getting the scale of the heightmap
     //Using depth as the name of texture height, to not confuse with terrain height

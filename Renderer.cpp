@@ -28,6 +28,13 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
         }
     }
 
+    //Tick prevents the first deltatime from being a large number
+    //Tick
+    auto now = std::chrono::steady_clock::now();
+    deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(now - lastUpdate).count() / 1000000.0f;
+    lastUpdate = now;
+
+
     mObjects.push_back(new Triangle());
     mObjects.push_back((new TriangleSurface()));
     mObjects.push_back((new WorldAxis()));
@@ -368,6 +375,8 @@ void Renderer::startNextFrame()
     lastUpdate = now;
 
 
+    //qDebug()<<mObjects.at(3)->getPosition();
+
     //Handeling input from keyboard and mouse is done in VulkanWindow
     //Has to be done each frame to get smooth movement
     mVulkanWindow->handleInput();
@@ -421,14 +430,16 @@ void Renderer::startNextFrame()
     mDeviceFunctions->vkCmdEndRenderPass(commandBuffer);
 
 
-    QVector3D LastPosition(mPlayer->GetPosition().x(),0, mPlayer->GetPosition().z());
-
     //Player prevent from moving ouside the HeightMap
     float y = getPositionInTerrain(static_cast<HeightMap*>(mObjects.at(3)),mPlayer->GetPosition().x(),mPlayer->GetPosition().z());
     //qDebug() << y;
 
-     mPlayer->SetYPosition(y);
+    mPlayer->getIsInsideMap(IsObjectInsideTheTriangle(static_cast<HeightMap*>(mObjects.at(3)),mPlayer->GetPosition().x(),mPlayer->GetPosition().z()));
 
+    if(IsObjectInsideTheTriangle(static_cast<HeightMap*>(mObjects.at(3)),mPlayer->GetPosition().x(),mPlayer->GetPosition().z()))
+    {
+         mPlayer->SetYPosition(y);
+    }
 
 
      //NPC

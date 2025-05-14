@@ -3,8 +3,12 @@
 
 #include <QVulkanWindow>
 #include <vector>
+
+#include "ColliderAABB.h"
+#include "ColliderSystem.h"
 #include "Vertex.h"
 #include "Utilities.h"
+
 
 class VisualObject
 {
@@ -63,6 +67,12 @@ public:
     //For NPC to check if they detected the player
     virtual void IsDetected(bool bIsDetected, const QVector3D &PlayerPos);
 
+    //Collider
+
+    void GetColliderAABB(ColliderAABB* colliderAABB);
+
+
+
 protected:
     std::vector<Vertex> mVertices;
     std::vector<uint32_t> mIndices;
@@ -73,7 +83,15 @@ protected:
 	BufferHandle mIndexBuffer;
     //VkPrimitiveTopology mTopology{ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST }; //not used
 
-    int drawType{ 0 }; // 0 = fill, 1 = line
+    int drawType{ 0 }; // 0 = fill, 1 = without texture, 2 lines only
+
+    //Collider
+
+    ColliderAABB* Collidera{nullptr};
+
+
+
+
 };
 
 #endif // VISUALOBJECT_H

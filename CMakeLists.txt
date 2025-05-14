@@ -28,6 +28,11 @@ qt_add_executable(QtVulkanApp
     Surface.h Surface.cpp
     beziercurve.h beziercurve.cpp
     NPCwithBEZIER.h NPCwithBEZIER.cpp
+
+    CollisionDetection.h CollisionDetection.cpp
+    ColliderAABB.h ColliderAABB.cpp
+
+    spherecollider.h spherecollider.cpp
 )
 # Define the shader files
 set(SHADER_FILES
