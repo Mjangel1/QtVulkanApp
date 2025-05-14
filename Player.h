@@ -35,6 +35,7 @@ private:
 
     bool bInsideMap = true;
 
+    ColliderAABB* ColliderAB;
 
 
 public:
@@ -49,6 +50,7 @@ public:
 
     //Scale only x and Y
     void ScaleXY(float x, float y) override;
+    QVector3D GetScaleXY();
 
 
     void move(float x,float y,float z) override;
@@ -58,6 +60,8 @@ public:
     void OutsideBoundry();
 
     bool getIsInsideMap(bool IsInside);
+
+    void UpdateCollider();
 
 
 };

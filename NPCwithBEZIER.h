@@ -11,6 +11,8 @@ public:
 
     void UpdateMatrix();
 
+    void UpdateCollider();
+
 private:
 
     QVector3D CurrentPos{0,0,0};
@@ -36,6 +38,10 @@ private:
     QVector2D PatrolStartpos;
 
     QVector3D d;
+
+
+    //Collider
+    ColliderAABB* ColliderAB;
 
 public:
 

@@ -6,16 +6,25 @@ Player::Player() : ObjMesh(assetPath + "cylinder.obj")
 
 
     setName("Player");
+    ScaleXY(0.5f,2);
+
+    ColliderAB = new ColliderAABB();
+    SetColliderAABB(ColliderAB);
+
+    ColliderAB->SetColliderPosition(GetPosition());
+    ColliderAB->SetSize((GetDimensions()*GetScaleXY())/ 2);
+
 }
 
 void Player::Tick(float Deltatime)
 {
-    //may cause a small value to appear when the first deltatime starts
- // mSpeed = 3* Deltatime; -> dont use
 
-    //prevents the value from being to big
-    mSpeed = 3 * qBound(0.01f, Deltatime, 0.1f);
+    UpdateCollider();
 
+   // qDebug()<<GetColliderAABB().GetSize();
+
+    //qDebug()<<GetScaleXY();
+    mSpeed = 3* Deltatime;
 
 
     //qDebug()<< GetPosition().y();
@@ -26,7 +35,7 @@ void Player::Tick(float Deltatime)
         OutsideBoundry();
     }
 
-    qDebug()<<bInsideMap;
+    //qDebug()<<bInsideMap;
 
 }
 
@@ -40,6 +49,7 @@ void Player::UpdateMatrix()
 
     //mMatrix.scale(GetScale());
     mMatrix.scale(mScaleX,mScaleY);
+
 }
 
 void Player::SetPostion(const QVector3D &Position)
@@ -72,6 +82,11 @@ void Player::ScaleXY(float x, float y)
     mScaleY = y;
 }
 
+QVector3D Player::GetScaleXY()
+{
+    return QVector3D(mScaleX,mScaleY,1);
+}
+
 void Player::move(float x, float y, float z)
 {
     //prevents diagonal movement from being faster then 1 direction movement
@@ -91,7 +106,7 @@ void Player::move(float x, float y, float z)
     QVector3D MoveDirection = (Direction*mSpeed);
 
 
-
+   // qDebug()<< GetPosition() + MoveDirection;
 
     SetPostion(GetPosition() + MoveDirection);
 
@@ -123,5 +138,12 @@ bool Player::getIsInsideMap(bool IsInside)
 {
     bInsideMap = IsInside;
     return bInsideMap;
+
+}
+
+void Player::UpdateCollider()
+{
+    GetColliderAABB().SetColliderPosition(GetPosition());
+   // ColliderAB->SetSize((GetDimensions() * GetScale())/2);
 
 }

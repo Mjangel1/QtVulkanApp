@@ -15,10 +15,20 @@ NPCwithBEZIER::NPCwithBEZIER() : ObjMesh(assetPath + "cylinder.obj")
     mScale = 1;
 
     d = GetDimensions();
+
+    //collider
+    ColliderAB = new ColliderAABB();
+    SetColliderAABB(ColliderAB);
+
+    ColliderAB->SetColliderPosition(GetPosition());
+    ColliderAB->SetSize(GetDimensions()/2);
+
+
 }
 
 void NPCwithBEZIER::Tick(float Deltatime)
 {
+    UpdateCollider();
 
     //Avoid using first value may be to big
     //mSpeed = 2* Deltatime; -> might break
@@ -32,95 +42,95 @@ void NPCwithBEZIER::Tick(float Deltatime)
     //qDebug() << "Speed : " << mSpeed;
 
 
-    if(BezierT >= 1.0)
-    {
-        BezierT = 1.0f;
-        BezierDirection = -1.0f;
+//     if(BezierT >= 1.0)
+//     {
+//         BezierT = 1.0f;
+//         BezierDirection = -1.0f;
 
-    }
-    if(BezierT <= 0.0)
-    {
-        BezierT = 0.0f;
-        BezierDirection = 1.0f;
+//     }
+//     if(BezierT <= 0.0)
+//     {
+//         BezierT = 0.0f;
+//         BezierDirection = 1.0f;
 
-    }
+//     }
 
-    BezierT +=  BezierDirection*(0.2  * Time);
+//     BezierT +=  BezierDirection*(0.2  * Time);
 
-//qDebug()<<d;
+// //qDebug()<<d;
 
-   // qDebug()<<bDetected;
+//    // qDebug()<<bDetected;
 
-    if(bDetected)
-    {
-        drawType = 2;
-        move(Playerpos.x(),0, Playerpos.z());
-        bHasReseted = false;
-    }
-    else
-    {
-        drawType = 0;
-        if(!bHasReseted)
-        {
-            ResetNPCPos();
+//     if(bDetected)
+//     {
+//         drawType = 2;
+//         move(Playerpos.x(),0, Playerpos.z());
+//         bHasReseted = false;
+//     }
+//     else
+//     {
+//         drawType = 0;
+//         if(!bHasReseted)
+//         {
+//             ResetNPCPos();
 
-            if(QVector2D(GetPosition().x() - PatrolStartpos.x(), GetPosition().z() - PatrolStartpos.y()).length() < 0.01 )
-            {
-                bHasReseted = true;
-                BezierT = 0.0f;
-                qDebug() << "Back at the start";
+//             if(QVector2D(GetPosition().x() - PatrolStartpos.x(), GetPosition().z() - PatrolStartpos.y()).length() < 0.01 )
+//             {
+//                 bHasReseted = true;
+//                 BezierT = 0.0f;
+//                 qDebug() << "Back at the start";
 
-            }
+//             }
 
-        }
-    }
-
-
-
-
-   // qDebug()<<BezierT;
-
-    if(bHasReseted)
-    {
-        if(!PatrolPos.empty())
-        {
-
-            if(bFinishedpath && QVector2D(GetPosition().x(),GetPosition().z()).distanceToPoint(PatrolPos[3]) < 0.1f )
-            {
-                bFinishedpath = true;
-
-            }
-            if(!bFinishedpath && QVector2D(GetPosition().x(),GetPosition().z()).distanceToPoint(PatrolPos[0]) < 0.1f)
-            {
-                bFinishedpath = false;
-            }
+//         }
+//     }
 
 
 
-            if(!bFinishedpath)
-            {
-                Pos = BezierCurve(BezierT,PatrolPos[0],PatrolPos[1],PatrolPos[2],PatrolPos[3]);
 
-            }
-            else
-            {
-                Pos = BezierCurve(BezierT,PatrolPos[3],PatrolPos[2],PatrolPos[1],PatrolPos[0]);
+//    // qDebug()<<BezierT;
 
-            }
+//     if(bHasReseted)
+//     {
+//         if(!PatrolPos.empty())
+//         {
 
-            //SetPosition(QVector3D(Pos.x(),0,Pos.y()));
+//             if(bFinishedpath && QVector2D(GetPosition().x(),GetPosition().z()).distanceToPoint(PatrolPos[3]) < 0.1f )
+//             {
+//                 bFinishedpath = true;
 
-            move(Pos.x(),0,Pos.y());
+//             }
+//             if(!bFinishedpath && QVector2D(GetPosition().x(),GetPosition().z()).distanceToPoint(PatrolPos[0]) < 0.1f)
+//             {
+//                 bFinishedpath = false;
+//             }
 
 
 
-        }
-        else
-        {
-            qDebug() << "Im Empty";
-        }
+//             if(!bFinishedpath)
+//             {
+//                 Pos = BezierCurve(BezierT,PatrolPos[0],PatrolPos[1],PatrolPos[2],PatrolPos[3]);
 
-    }
+//             }
+//             else
+//             {
+//                 Pos = BezierCurve(BezierT,PatrolPos[3],PatrolPos[2],PatrolPos[1],PatrolPos[0]);
+
+//             }
+
+//             //SetPosition(QVector3D(Pos.x(),0,Pos.y()));
+
+//             move(Pos.x(),0,Pos.y());
+
+
+
+//         }
+//         else
+//         {
+//             qDebug() << "Im Empty";
+//         }
+
+//     }
 
 
 
@@ -140,6 +150,12 @@ void NPCwithBEZIER::UpdateMatrix()
     mMatrix.setToIdentity();
     mMatrix.translate(CurrentPos);
     mMatrix.scale(GetScale());
+}
+
+void NPCwithBEZIER::UpdateCollider()
+{
+    GetColliderAABB().SetColliderPosition(GetPosition());
+
 }
 
 void NPCwithBEZIER::SetPosition(const QVector3D &Position)

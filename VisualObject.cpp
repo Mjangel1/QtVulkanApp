@@ -52,10 +52,30 @@ void VisualObject::IsDetected(bool bIsDetected, const QVector3D &PlayerPos)
 
 }
 
-void VisualObject::GetColliderAABB(ColliderAABB *colliderAABB)
+void VisualObject::SetColliderAABB(ColliderAABB *colliderAABB)
 {
+    if(colliderAABB == nullptr)
+    {
+        qDebug() << "Collider pointer is null!";
+        return; // Do not assign if nullptr
+    }
 
+    ColliderAB =colliderAABB;
 }
+
+ColliderAABB &VisualObject::GetColliderAABB()
+{
+    if(!ColliderAB)
+    {
+        qDebug() << "Collider not found!";
+
+    }
+
+
+    return *ColliderAB;
+}
+
+
 
 
 

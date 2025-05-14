@@ -20,13 +20,13 @@ bool CheckCollisionAABBOnly(ColliderAABB &Actor, ColliderAABB &OtherActor)
 
 bool CheckSphereCollision(SphereCollider &Actor, SphereCollider &OtherActor)
 {
-    float distance = (Actor.GetColliderPosition()-OtherActor.GetColliderPosition()).length();
+//     float distance = (Actor.GetColliderPosition()-OtherActor.GetColliderPosition()).length();
 
-// if the distance between the center of each sphere is smaller or equal to the sum of both radius its colliding
-    if(distance <= Actor.GetRadius()+ OtherActor.GetRadius())
-    {
-        return true;
-    }
+// // if the distance between the center of each sphere is smaller or equal to the sum of both radius its colliding
+//     if(distance <= Actor.GetRadius()+ OtherActor.GetRadius())
+//     {
+//         return true;
+//     }
     return false;
 
 }
@@ -40,6 +40,6 @@ bool CheckAabbSphereCollision(ColliderAABB &Actor, SphereCollider &OtherActor)
 
     float distance;
 
-    return 0;
+    return false;
 
 }

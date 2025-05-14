@@ -2,6 +2,7 @@
 #include <QVulkanFunctions>
 #include <QFile>
 #include <fstream>
+#include "CollisionDetection.h"
 #include "VulkanWindow.h"
 #include "WorldAxis.h"
 #include "Triangle.h"
@@ -66,7 +67,7 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.push_back(mPlayer);
     //Starting Position for Player
     mPlayer->SetPostion(QVector3D(2.5,0,0));
-    mPlayer->ScaleXY(0.5f,2);
+
 
 
 
@@ -439,6 +440,12 @@ void Renderer::startNextFrame()
     if(IsObjectInsideTheTriangle(static_cast<HeightMap*>(mObjects.at(3)),mPlayer->GetPosition().x(),mPlayer->GetPosition().z()))
     {
          mPlayer->SetYPosition(y);
+    }
+
+
+    if(CheckCollisionAABBOnly(mPlayer->GetColliderAABB(),mNpcBezier->GetColliderAABB()))
+    {
+        qDebug() <<"fucky";
     }
 
 

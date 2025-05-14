@@ -67,9 +67,12 @@ public:
     //For NPC to check if they detected the player
     virtual void IsDetected(bool bIsDetected, const QVector3D &PlayerPos);
 
-    //Collider
+    //Collider AABB
 
-    void GetColliderAABB(ColliderAABB* colliderAABB);
+    void SetColliderAABB(ColliderAABB* colliderAABB);
+    ColliderAABB& GetColliderAABB();
+
+ //Collider Sphere
 
 
 
@@ -87,7 +90,7 @@ protected:
 
     //Collider
 
-    ColliderAABB* Collidera{nullptr};
+    ColliderAABB* ColliderAB{nullptr};
 
 
 
