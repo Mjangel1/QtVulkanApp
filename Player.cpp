@@ -12,7 +12,7 @@ Player::Player() : ObjMesh(assetPath + "cylinder.obj")
     SetColliderAABB(ColliderAB);
 
     ColliderAB->SetColliderPosition(GetPosition());
-    ColliderAB->SetSize((GetDimensions()*GetScaleXY())/ 2);
+    ColliderAB->SetSize((GetDimensions()* GetScale())/ 2);
 
 }
 
@@ -29,11 +29,6 @@ void Player::Tick(float Deltatime)
 
     //qDebug()<< GetPosition().y();
 
-    if(!bInsideMap)
-    {
-        //qDebug() << "outside";
-        OutsideBoundry();
-    }
 
     //qDebug()<<bInsideMap;
 
@@ -144,6 +139,7 @@ bool Player::getIsInsideMap(bool IsInside)
 void Player::UpdateCollider()
 {
     GetColliderAABB().SetColliderPosition(GetPosition());
-   // ColliderAB->SetSize((GetDimensions() * GetScale())/2);
+
+   GetColliderAABB().SetSize((GetDimensions() * GetScale())/2);
 
 }

@@ -11,6 +11,7 @@ bool FindObjectInTerrain(HeightMap *terrain, QVector2D pos, QVector3D &baryOut, 
 
     QVector2D ObjPos = pos;
 
+    qDebug() << indices;
 
     for(size_t i = 0; i+2 < indices.size(); i+=3)
     {
